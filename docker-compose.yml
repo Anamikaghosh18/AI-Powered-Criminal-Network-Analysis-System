@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: crime_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chicagocrime
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  neo4j:
+    image: neo4j:5.14.0
+    container_name: crime_neo4j
+    environment:
+      NEO4J_AUTH: neo4j/password
+      # Optional: Enable GDS (Graph Data Science) if you want to run graph AI later
+      # NEO4J_PLUGINS: '["graph-data-science"]' 
+    ports:
+      - "7474:7474" # HTTP Browser
+      - "7687:7687" # Bolt Protocol (Python Driver)
+    volumes:
+      - neo4j_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  neo4j_data:
